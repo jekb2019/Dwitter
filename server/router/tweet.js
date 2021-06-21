@@ -17,7 +17,7 @@ router.get('/', (req, res, next) => {
     } else {
         next();
     }
-})
+});
 
 /**
  * Get all tweets for a specified user in "username" query
@@ -35,7 +35,7 @@ router.get('/', (req, res, next) => {
             filteredTweet
         })
     }
-})
+});
 
 /**
  * Get a single tweet for a specified tweet ID
@@ -52,7 +52,7 @@ router.get('/:id', (req, res, next) => {
     } else {
         return res.status(200).send(targetTweet[0]);
     }
-})
+});
 
 /**
  * Create a new tweet
@@ -72,7 +72,7 @@ router.post('/', (req, res, next) => {
     // add tweet to database
     allTweets.push(newTweetCreated);
     res.status(200).send(newTweetCreated);
-})
+});
 
 /**
  * Update a tweet for a specified tweet ID
@@ -81,9 +81,28 @@ router.post('/', (req, res, next) => {
  */
 router.put('/:id', (req, res, next) => {
     const tweetId = req.params.id;
-    const updatedText = req.body;
-    res.sendStatus(404);
-})
+    const updatedText = req.body.text;
+    let filteredTweet;
+
+    // find corressponding tweet
+    const filteredTweetArr = allTweets.filter(tweet => tweet.id === tweetId);
+    if (filteredTweetArr.length === 0) {
+        return res.sendStatus(404);
+    } else {
+        filteredTweet = filteredTweetArr[0];
+        console.log(updatedText);
+    }
+
+    // update tweet text and update the tweet database
+    filteredTweet.text = updatedText;
+    allTweets.forEach(tweet => {
+        if(tweet.id === tweetId) {
+            tweet = filteredTweet;
+        }
+    });
+
+    res.status(200).send(filteredTweet);
+});
 
 /**
  * Delete a tweet with a specified tweet ID
@@ -91,6 +110,6 @@ router.put('/:id', (req, res, next) => {
 router.delete('/:id', (req, res, next) => {
     const tweetId = req.params.id;
     res.sendStatus(404);
-})
+});
 
 export default router;
