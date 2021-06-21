@@ -109,7 +109,21 @@ router.put('/:id', (req, res, next) => {
  */
 router.delete('/:id', (req, res, next) => {
     const tweetId = req.params.id;
-    res.sendStatus(404);
+
+    // check if a tweet with such ID exists
+    const filteredTweetArr = allTweets.filter(tweet => tweet.id === tweetId);
+    if(filteredTweetArr.length === 0) {
+        return res.sendStatus(404);
+    }
+    
+    // delete tweet
+    allTweets.forEach((tweet, index, array) => {
+        if(tweet.id === tweetId) {
+            array.splice(index, 1);
+        }
+    })
+    
+    res.sendStatus(204);
 });
 
 export default router;
