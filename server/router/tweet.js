@@ -43,7 +43,14 @@ router.get('/', (req, res, next) => {
 router.get('/:id', (req, res, next) => {
     // search tweet with username
     const tweetId = req.params.id;
-    res.status(404).send(tweetId);
+
+    const targetTweet = allTweets.filter(tweet => tweet.id === tweetId);
+    console.log(targetTweet);
+    if(targetTweet.length === 0) {
+        return res.sendStatus(404);
+    } else {
+        return res.status(200).send(targetTweet[0]);
+    }
 })
 
 /**
