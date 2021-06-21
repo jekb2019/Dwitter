@@ -7,10 +7,10 @@ const router = express.Router();
  * Respose format: { [tweet, tweet, ...] }
  */
 router.get('/', (req, res, next) => {
-    if(!Object.keys(req.query).length !== 0) {
-        next();
+    if(Object.keys(req.query).length === 0) {
+        res.status(404).send("get all tweet");
     } else {
-        res.status(404).send("get all tweet")
+        next();
     }
 })
 
