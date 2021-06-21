@@ -10,7 +10,8 @@ const allTweets = tweetDB.tweets;
  */
 router.get('/', (req, res, next) => {
     if(Object.keys(req.query).length === 0) {
-        return res.sendStatus(200).send({
+        console.log("true");
+        return res.status(200).send({
             allTweets
         })
     } else {
@@ -30,7 +31,7 @@ router.get('/', (req, res, next) => {
     if(filteredTweet.length === 0) {
         return res.sendStatus(404);
     } else {
-        res.status(200).send({
+        return res.status(200).send({
             filteredTweet
         })
     }
@@ -59,9 +60,18 @@ router.get('/:id', (req, res, next) => {
  * Response format: { tweet }
  */
 router.post('/', (req, res, next) => {
-    const newTweet = req.body;
-    console.log(newTweet);
-    res.sendStatus(404);
+    const newTweetFromUser = req.body;
+
+    // created a new tweet in { tweet } format
+    const newTweetCreated = { 
+        ...newTweetFromUser, 
+        id: new Date().valueOf().toString(), 
+        createdAt: new Date().toDateString()
+    }
+
+    // add tweet to database
+    allTweets.push(newTweetCreated);
+    res.status(200).send(newTweetCreated);
 })
 
 /**
