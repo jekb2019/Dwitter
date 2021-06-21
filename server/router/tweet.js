@@ -1,6 +1,8 @@
 import express from 'express';
+import * as tweetDB from '../data/tweet-data.js';
 
 const router = express.Router();
+const allTweets = tweetDB.tweets;
 
 /**
  * Get all tweets.
@@ -8,7 +10,9 @@ const router = express.Router();
  */
 router.get('/', (req, res, next) => {
     if(Object.keys(req.query).length === 0) {
-        res.status(404).send("get all tweet");
+        return res.sendStatus(200).send({
+            allTweets
+        })
     } else {
         next();
     }
@@ -19,8 +23,17 @@ router.get('/', (req, res, next) => {
  * Response format: { [tweet, tweet, ...] }
  */
 router.get('/', (req, res, next) => {
-    const query = req.query;
-    res.status(404).send(query);
+    const username = req.query.username;
+    // Check if any tweet of matching username exists
+    const filteredTweet = allTweets.filter(tweet => tweet.username === username);
+    console.log(filteredTweet.length);
+    if(filteredTweet.length === 0) {
+        return res.sendStatus(404);
+    } else {
+        res.status(200).send({
+            filteredTweet
+        })
+    }
 })
 
 /**
@@ -28,6 +41,7 @@ router.get('/', (req, res, next) => {
  * Response format: { tweet }
  */
 router.get('/:id', (req, res, next) => {
+    // search tweet with username
     const tweetId = req.params.id;
     res.status(404).send(tweetId);
 })

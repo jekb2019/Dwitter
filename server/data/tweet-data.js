@@ -22,5 +22,19 @@ export const tweets = [
         name: "Jason",  // 사용자 이름
         username: "jason",  // 사용자 닉네임 (아이디)
         url: "https://widgetwhats.com/app/uploads/2019/11/free-profile-photo-whatsapp-4-300x300.png" // 사용자 프로파일 사진 URL
+    },
+    {
+        id: "3",  // 트윗 아이디
+        text: "First - Bob",  // 트윗 텍스트
+        createdAt: new Date().toDateString(), // 트윗 생성 날짜
+        name: "Bob",  // 사용자 이름
+        username: "bob",  // 사용자 닉네임 (아이디)
+    },
+    {
+        id: "4",  // 트윗 아이디
+        text: "Second - Bob",  // 트윗 텍스트
+        createdAt: new Date().toDateString(), // 트윗 생성 날짜
+        name: "Bob",  // 사용자 이름
+        username: "bob",  // 사용자 닉네임 (아이디)
     }
 ]
