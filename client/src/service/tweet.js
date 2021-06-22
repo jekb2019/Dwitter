@@ -77,11 +77,33 @@ export default class TweetService {
   }
 
   async updateTweet(tweetId, text) {
-    const tweet = this.tweets.find((tweet) => tweet.id === tweetId);
-    if (!tweet) {
+    console.log(tweetId);
+    //fetch tweet with tweetId
+    const url = new URL(process.env.REACT_APP_TWEET_URL + tweetId);
+    const tweetById = fetch(url)
+    .then(response => response.json());
+
+    if (!tweetById) {
       throw new Error('tweet not found!');
     }
-    tweet.text = text;
-    return tweet;
+
+    const fetchedTweet = await tweetById;
+    fetchedTweet.text = text;
+
+    console.log(fetchedTweet);
+    console.log({text});
+
+    // update tweet
+    console.log("put");
+    const updatedTweet = fetch(url, {
+      method: "PUT",
+      body: JSON.stringify({text}),
+      headers: {
+        "Content-type": "application/json; charset=UTF-8"
+      }
+    })
+    .then(response => response.json());
+
+    return await updatedTweet;
   }
 }

@@ -9,7 +9,6 @@ const allTweets = tweetDB.tweets;
  * Respose format: { [tweet, tweet, ...] }
  */
 router.get('/', (req, res, next) => {
-    console.log("Tweet: GET /");
     if(Object.keys(req.query).length === 0) {
         return res.status(200).send({
             allTweets
@@ -42,7 +41,7 @@ router.get('/', (req, res, next) => {
  */
 router.get('/:id', (req, res, next) => {
     // search tweet with username
-    const tweetId = req.params.id;
+    const tweetId = parseInt(req.params.id);
 
     const targetTweet = allTweets.filter(tweet => tweet.id === tweetId);
     if(targetTweet.length === 0) {
@@ -63,7 +62,7 @@ router.post('/', (req, res, next) => {
     // created a new tweet in { tweet } format
     const newTweetCreated = { 
         ...newTweetFromUser, 
-        id: new Date().valueOf().toString(), 
+        id: new Date().valueOf(), 
         createdAt: new Date().toDateString()
     }
 
@@ -78,7 +77,7 @@ router.post('/', (req, res, next) => {
  * Response format: { tweet }
  */
 router.put('/:id', (req, res, next) => {
-    const tweetId = req.params.id;
+    const tweetId = parseInt(req.params.id);
     const updatedText = req.body.text;
     let filteredTweet;
 
