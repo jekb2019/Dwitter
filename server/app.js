@@ -21,6 +21,11 @@ app.get('/', (req, res, next) => {
     res.send('hi');
 });
 
+// Not supported APIs
+app.use((req, res, next) => {
+    res.sendStatus(404); 
+})
+
 // final error handling
 app.use((err, req, res, next) => {
     console.error(err);
