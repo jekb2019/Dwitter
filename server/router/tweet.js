@@ -9,8 +9,8 @@ const allTweets = tweetDB.tweets;
  * Respose format: { [tweet, tweet, ...] }
  */
 router.get('/', (req, res, next) => {
+    console.log("Tweet: GET /");
     if(Object.keys(req.query).length === 0) {
-        console.log("true");
         return res.status(200).send({
             allTweets
         })
@@ -27,7 +27,6 @@ router.get('/', (req, res, next) => {
     const username = req.query.username;
     // Check if any tweet of matching username exists
     const filteredTweet = allTweets.filter(tweet => tweet.username === username);
-    console.log(filteredTweet.length);
     if(filteredTweet.length === 0) {
         return res.sendStatus(404);
     } else {
@@ -46,7 +45,6 @@ router.get('/:id', (req, res, next) => {
     const tweetId = req.params.id;
 
     const targetTweet = allTweets.filter(tweet => tweet.id === tweetId);
-    console.log(targetTweet);
     if(targetTweet.length === 0) {
         return res.sendStatus(404);
     } else {
@@ -70,7 +68,7 @@ router.post('/', (req, res, next) => {
     }
 
     // add tweet to database
-    allTweets.push(newTweetCreated);
+    allTweets.unshift(newTweetCreated);
     res.status(200).send(newTweetCreated);
 });
 
@@ -90,7 +88,6 @@ router.put('/:id', (req, res, next) => {
         return res.sendStatus(404);
     } else {
         filteredTweet = filteredTweetArr[0];
-        console.log(updatedText);
     }
 
     // update tweet text and update the tweet database
@@ -115,7 +112,7 @@ router.delete('/:id', (req, res, next) => {
     if(filteredTweetArr.length === 0) {
         return res.sendStatus(404);
     }
-    
+
     // delete tweet
     allTweets.forEach((tweet, index, array) => {
         if(tweet.id === tweetId) {

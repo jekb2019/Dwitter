@@ -11,9 +11,41 @@ export default class TweetService {
   ];
 
   async getTweets(username) {
-    return username
-      ? this.tweets.filter((tweet) => tweet.username === username)
-      : this.tweets;
+    if(username) {
+      
+      const url = new URL(process.env.REACT_APP_TWEET_URL)
+      url.search = new URLSearchParams({username}).toString();
+      console.log(url);
+
+      const userTweets = fetch(url)
+      .then(
+        response => {
+          if (response.status !== 200) {
+            throw new Error(response.status);
+          }
+          return response.json();
+        }
+      )
+      .then(data => data["filteredTweet"])
+      .catch(console.error)
+
+      return await userTweets;
+
+    } else {
+      const allTweets = fetch(process.env.REACT_APP_TWEET_URL)
+      .then(
+        response => {
+          if (response.status !== 200) {
+            throw new Error(response.status);
+          }
+          return response.json();
+        }
+      )
+      .then(data => data["allTweets"])
+      .catch(console.error);
+
+      return await allTweets;
+    }
   }
 
   async postTweet(text) {
@@ -24,8 +56,17 @@ export default class TweetService {
       username: 'ellie',
       text,
     };
-    this.tweets.push(tweet);
-    return tweet;
+
+    const postedTweet = fetch(process.env.REACT_APP_TWEET_URL, {
+      method: "POST",
+      body: JSON.stringify(tweet),
+      headers: {
+        "Content-type": "application/json; charset=UTF-8"
+      }
+    })
+    .then(response => response.json())
+
+    return await postedTweet;
   }
 
   async deleteTweet(tweetId) {

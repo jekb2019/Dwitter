@@ -1,16 +1,19 @@
 import express from 'express';
 import tweetRouter from './router/tweet.js';
+import cors from 'cors';
 
 const app = express();
 
 app.use(express.json());
+app.use(cors())
+
 
 // redirect requests to router
 app.use('/tweets', tweetRouter);
 
 // 테스트용
 app.get('/', (req, res, next) => {
-    console.log('request');
+    console.log("test GET /");
     res.send('hi');
 });
 
