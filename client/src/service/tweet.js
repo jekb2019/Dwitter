@@ -15,7 +15,6 @@ export default class TweetService {
       
       const url = new URL(process.env.REACT_APP_TWEET_URL)
       url.search = new URLSearchParams({username}).toString();
-      console.log(url);
 
       const userTweets = fetch(url)
       .then(
@@ -77,7 +76,6 @@ export default class TweetService {
   }
 
   async updateTweet(tweetId, text) {
-    console.log(tweetId);
     //fetch tweet with tweetId
     const url = new URL(process.env.REACT_APP_TWEET_URL + tweetId);
     const tweetById = fetch(url)
@@ -90,11 +88,7 @@ export default class TweetService {
     const fetchedTweet = await tweetById;
     fetchedTweet.text = text;
 
-    console.log(fetchedTweet);
-    console.log({text});
-
-    // update tweet
-    console.log("put");
+    // update tweet in the server
     const updatedTweet = fetch(url, {
       method: "PUT",
       body: JSON.stringify({text}),

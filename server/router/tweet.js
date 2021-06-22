@@ -104,7 +104,7 @@ router.put('/:id', (req, res, next) => {
  * Delete a tweet with a specified tweet ID
  */
 router.delete('/:id', (req, res, next) => {
-    const tweetId = req.params.id;
+    const tweetId = parseInt(req.params.id);
 
     // check if a tweet with such ID exists
     const filteredTweetArr = allTweets.filter(tweet => tweet.id === tweetId);
