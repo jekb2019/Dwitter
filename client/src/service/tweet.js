@@ -70,7 +70,10 @@ export default class TweetService {
   }
 
   async deleteTweet(tweetId) {
-    this.tweets = this.tweets.filter((tweet) => tweet.id !== tweetId);
+    const url = new URL(process.env.REACT_APP_TWEET_URL + tweetId);
+    fetch(url, {
+      method: "DELETE"
+    });
   }
 
   async updateTweet(tweetId, text) {
