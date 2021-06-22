@@ -1,5 +1,4 @@
 import express from 'express';
-import 'express-async-errors';
 
 import * as tweetDB from '../data/tweet-data.js';
 
