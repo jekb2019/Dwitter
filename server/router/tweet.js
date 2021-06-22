@@ -7,6 +7,7 @@ const router = express.Router();
 const allTweets = tweetDB.tweets;
 
 /**
+ * GET /tweets
  * Get all tweets.
  * Respose format: { [tweet, tweet, ...] }
  */
@@ -21,6 +22,7 @@ router.get('/', (req, res, next) => {
 });
 
 /**
+ * GET /tweets?username=:username
  * Get all tweets for a specified user in "username" query
  * Response format: { [tweet, tweet, ...] }
  */
@@ -38,6 +40,7 @@ router.get('/', (req, res, next) => {
 });
 
 /**
+ * GET /tweets/:id
  * Get a single tweet for a specified tweet ID
  * Response format: { tweet }
  */
@@ -54,6 +57,7 @@ router.get('/:id', (req, res, next) => {
 });
 
 /**
+ * POST /tweets
  * Create a new tweet
  * Request format: { text, name, username, url (optional) }
  * Response format: { tweet }
@@ -74,6 +78,7 @@ router.post('/', (req, res, next) => {
 });
 
 /**
+ * PUT /tweets/:id
  * Update a tweet for a specified tweet ID
  * Request format: { text }
  * Response format: { tweet }
@@ -103,6 +108,7 @@ router.put('/:id', (req, res, next) => {
 });
 
 /**
+ * DELETE /tweets/:id
  * Delete a tweet with a specified tweet ID
  */
 router.delete('/:id', (req, res, next) => {
