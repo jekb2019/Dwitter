@@ -1,4 +1,9 @@
 export default class TweetService {
+  constructor(baseURL) {
+    this.baseURL = baseURL;
+  }
+
+
   async getTweets(username) {
     if(username) {
       
