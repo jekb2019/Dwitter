@@ -1,31 +1,18 @@
 import express from 'express';
 import * as tweetController from '../controller/tweet.js';
-const router = express.Router();
 import { body, param, query, validationResult } from 'express-validator'
+import {validate} from '../middleware/validator.js';
 
-// Validation Handler
-const validate = (req, res, next) => {
-    const errors = validationResult(req);
-    if (errors.isEmpty()) {
-        return next();
-    }
-    return res.status(400).json({ message: errors.array()[0].msg })
-}
+const router = express.Router();
 
 // GET /tweets
 // GET /tweets?username=:username
-// Validation:
-// Sanitization:
 router.get('/', [query("username").trim()], tweetController.getTweets);
 
 // GET /tweets/:id
-// Validation: id valid
-// Sanitization: id sanitization
 router.get('/:id',[param('id').trim()], tweetController.getTweet);
 
 // POST /tweeets
-// Validation: body valid
-// Sanitization: body sanitization
 router.post('/', 
 [
     body("text").trim().isLength({ min:3 }).withMessage("Tweet needs to be at least 3 characters"), 
@@ -36,8 +23,6 @@ router.post('/',
 tweetController.createTweet);
 
 // PUT /tweets/:id
-// Validation:
-// Sanitization:
 router.put('/:id', 
     [
         body("text").notEmpty().withMessage("Tweet empty"),
@@ -46,8 +31,6 @@ router.put('/:id',
 tweetController.updateTweet);
 
 // DELETE /tweets/:id
-// Validation
-// Sanitization
 router.delete('/:id', tweetController.deleteTweet);
 
 export default router;
