@@ -1,5 +1,4 @@
 import * as tweetRepository from '../data/tweet.js';
-import { validationResult } from 'express-validator';
 
 export async function getTweets(req, res) {
   const username = req.query.username;
@@ -10,11 +9,6 @@ export async function getTweets(req, res) {
 }
 
 export async function getTweet(req, res, next) {
-  // Validation
-  const errors = validationResult(req);
-  if(!errors.isEmpty()) {
-      return res.status(400).json({message: errors.array() });
-  }
   const id = req.params.id;
   const tweet = await tweetRepository.getById(id);
   if (tweet) {
@@ -25,24 +19,12 @@ export async function getTweet(req, res, next) {
 }
 
 export async function createTweet(req, res, next) {
-  // Validation
-  const errors = validationResult(req);
-  if(!errors.isEmpty()) {
-      return res.status(400).json({message: errors.array() });
-  }
-
   const { text, name, username } = req.body;
   const tweet = await tweetRepository.create(text, name, username);
   res.status(201).json(tweet);
 }
 
 export async function updateTweet(req, res, next) {
-  // Validation
-  const errors = validationResult(req);
-  if(!errors.isEmpty()) {
-      return res.status(400).json({message: errors.array() });
-  }
-
   const id = req.params.id;
   const text = req.body.text;
   const tweet = await tweetRepository.update(id, text);
