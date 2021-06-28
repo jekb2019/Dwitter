@@ -1,3 +1,4 @@
+// Initial data
 let tweets = [
     {
       id: '1',
@@ -16,6 +17,7 @@ let tweets = [
     },
   ];
   
+  // Functions for retrieving/inserting data to the database
   export async function getAll() {
     return tweets;
   }

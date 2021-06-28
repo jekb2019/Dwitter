@@ -1,5 +1,6 @@
 import * as tweetRepository from '../data/tweet.js';
 
+// Get tweets by usernamae. If no username specified, get all tweets
 export async function getTweets(req, res) {
   const username = req.query.username;
   const data = await (username
@@ -8,6 +9,7 @@ export async function getTweets(req, res) {
   res.status(200).json(data);
 }
 
+// Get tweet by tweet id
 export async function getTweet(req, res, next) {
   const id = req.params.id;
   const tweet = await tweetRepository.getById(id);
@@ -18,12 +20,14 @@ export async function getTweet(req, res, next) {
   }
 }
 
+// Create new tweet
 export async function createTweet(req, res, next) {
   const { text, name, username } = req.body;
   const tweet = await tweetRepository.create(text, name, username);
   res.status(201).json(tweet);
 }
 
+// Update tweet specified by tweet id
 export async function updateTweet(req, res, next) {
   const id = req.params.id;
   const text = req.body.text;
@@ -35,6 +39,7 @@ export async function updateTweet(req, res, next) {
   }
 }
 
+// Delete tweet specified by tweet id
 export async function deleteTweet(req, res, next) {
   const id = req.params.id;
   await tweetRepository.remove(id);
