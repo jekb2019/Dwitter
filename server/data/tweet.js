@@ -1,4 +1,4 @@
-// Initial data
+// Initial Mock Data
 let tweets = [
     {
       id: '1',

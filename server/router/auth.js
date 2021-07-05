@@ -1,18 +1,13 @@
 import express from 'express';
+import * as authController from '../controller/auth.js'
 
 const router = express.Router();
 
-router.post('/signup', (req, res, next) => {
-    res.status(201).send("signup")
-});
+router.post('/signup', authController.signUp);
 
-router.post('/login', (req, res, next) => {
-    res.status(200).send("login")
-});
+router.post('/login', authController.login);
 
-router.get('/me', (req, res, next) => {
-    res.status(200).send("token avail")
-});
+router.get('/me', authController.checkTokenAvailable);
 
 
 export default router;
