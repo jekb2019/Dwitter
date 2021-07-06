@@ -3,6 +3,9 @@ import * as authController from '../controller/auth.js'
 
 const router = express.Router();
 
+// This middleware is for test purposes
+router.get('/users', authController.getAll)
+
 router.post('/signup', authController.signUp);
 
 router.post('/login', authController.login);

@@ -24,17 +24,29 @@ let users = [
     }
 ];
 
+// ## This function should be removed. Highly insecure ##
 // Get all users
-async function getAll() {
+export async function getAll() {
     return users;
 }
 
 // Get a specified user
-async function getUser(id) {
+export async function getUser(id) {
     return users.filter((user) => user.id === id);
 }
 
 // Add a user
-export async function signUp() {
+export async function signUp(username, password, name, email, url = undefined) {
+    // Create new user and insert to database
+    const user = {
+        id: Date.now().toString(),
+        username,
+        password,
+        name,
+        email,
+        ...(url && {url} ) // 여기는 엘리가 어떻게 했을까?
+    }
 
+    users = [user, ...users];
+    return { username };
 }
