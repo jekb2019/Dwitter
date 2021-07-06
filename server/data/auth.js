@@ -30,13 +30,20 @@ export async function getAll() {
     return users;
 }
 
-// Get a specified user
-export async function getUser(id) {
-    return users.filter((user) => user.id === id);
+// Get a specified user with id
+export async function getUserById(id) {
+    return users.find((user) => user.id === id);
+}
+
+// Get a specified user with matching ID and PW
+export async function getUserByCred(username, password) {
+    return users.find((user) => user.username === username && user.password === password);
 }
 
 // Add a user
 export async function signUp(username, password, name, email, url = undefined) {
+    // Check if any user with same username & pw combination exists
+
     // Create new user and insert to database
     const user = {
         id: Date.now().toString(),
