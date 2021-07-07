@@ -40,11 +40,19 @@ export async function getUserByCred(username, password) {
     return users.find((user) => user.username === username && user.password === password);
 }
 
+// Check if username is duplicate
+export async function isDuplicateUsername(username) {
+    const duplicate = users.find(user => user.username === username);
+    if(duplicate) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
 // Add a user
 export async function signUp(username, password, name, email, url = undefined) {
-    // Check if any user with same username & pw combination exists
-    
-    // Create new user and insert to database
+    // // Create new user and insert to database
     const user = {
         id: Date.now().toString(),
         username,
@@ -55,5 +63,5 @@ export async function signUp(username, password, name, email, url = undefined) {
     }
 
     users = [user, ...users];
-    return { username };
+    return { user };
 }

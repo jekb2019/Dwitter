@@ -17,10 +17,22 @@ export async function getAll(req, res, next) {
 // 아이디 비번 중복 확인 아직 안함
 export async function signUp(req, res, next) {
     const { username, password, name, email, url } = req.body;
-    
 
+    // Check if user with same username already exists
+    const isDuplicate = await authRepository.isDuplicateUsername(username);
+    if(isDuplicate) {
+        return res.sendStatus(409);
+    }
 
+    // Register new user
     const user = await authRepository.signUp(username, password, name, email, url);
+
+    // Create JWT token and insert it to header (Default expiration time is 24 hours)
+    const token = jsonwebtoken.sign({
+        id: user.id
+    }, secretKey);
+    
+    res.header("JWT-Token", token);
     res.status(201).json(user)
 }
 
@@ -30,7 +42,7 @@ export async function login(req, res, next) {
 
     // Login Validation
     const user = await authRepository.getUserByCred(username, password);
-    // If Success, Create JWT and insert it to header
+    // If Success, Create JWT token and insert it to header
     if(user) {
         // Default expiration time is 24 hours
         const token = jsonwebtoken.sign({
