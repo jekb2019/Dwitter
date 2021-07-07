@@ -43,7 +43,7 @@ export async function getUserByCred(username, password) {
 // Add a user
 export async function signUp(username, password, name, email, url = undefined) {
     // Check if any user with same username & pw combination exists
-
+    
     // Create new user and insert to database
     const user = {
         id: Date.now().toString(),

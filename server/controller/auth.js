@@ -1,6 +1,9 @@
 import jsonwebtoken from 'jsonwebtoken';
 import * as authRepository from '../data/auth.js';
 
+// JWT Secret Key
+const secretKey = 'VctqLpa73cX9kKa9gHHhwDd6Xz9W5Hxk';
+
 // ## This function should be removed. Highly insecure ##
 // Get all users (for test purpose)
 export async function getAll(req, res, next) {
@@ -14,6 +17,9 @@ export async function getAll(req, res, next) {
 // 아이디 비번 중복 확인 아직 안함
 export async function signUp(req, res, next) {
     const { username, password, name, email, url } = req.body;
+    
+
+
     const user = await authRepository.signUp(username, password, name, email, url);
     res.status(201).json(user)
 }
@@ -21,20 +27,20 @@ export async function signUp(req, res, next) {
 // Login user
 export async function login(req, res, next) {
     const { username, password } = req.body;
-    // check if a user with such id & pw exists
-    const user = await authRepository.getUserByCred(username, password);
 
-    // if user exists, create JWT
-    // return JWT back to the client inside the header (200OK)
+    // Login Validation
+    const user = await authRepository.getUserByCred(username, password);
+    // If Success, Create JWT and insert it to header
     if(user) {
-        // create JWT
+        // Default expiration time is 24 hours
         const token = jsonwebtoken.sign({
             id: user.id
-        },'VctqLpa73cX9kKa9gHHhwDd6Xz9W5Hxk')
-        console.log(token);
-        res.header("JWT-Token", token);
+        }, secretKey) 
+        // insert token to header
+        res.header("Jwt-Token", token);
         return res.status(200).json(username)
     }
+    // If Failed, Return 404
     res.sendStatus(404);
 }
 
