@@ -63,5 +63,5 @@ export async function signUp(username, password, name, email, url = undefined) {
     }
 
     users = [user, ...users];
-    return { user };
+    return user;
 }

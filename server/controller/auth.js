@@ -29,9 +29,10 @@ export async function signUp(req, res, next) {
 
     // Create JWT token and insert it to header (Default expiration time is 24 hours)
     const token = jsonwebtoken.sign({
-        id: user.id
-    }, secretKey);
-    
+        id: user.id,
+        username: user.username
+    }, secretKey, {expiresIn: 3600});
+
     res.header("JWT-Token", token);
     res.status(201).json(user)
 }
@@ -46,8 +47,9 @@ export async function login(req, res, next) {
     if(user) {
         // Default expiration time is 24 hours
         const token = jsonwebtoken.sign({
-            id: user.id
-        }, secretKey) 
+            id: user.id,
+            username: user.username
+        }, secretKey, {expiresIn: 3600}) 
         // insert token to header
         res.header("Jwt-Token", token);
         return res.status(200).json(username)
@@ -58,5 +60,16 @@ export async function login(req, res, next) {
 
 // Check if currently holding token is available
 export async function checkTokenAvailable(req, res, next) {
-    res.status(200).send("token avail")
+    const token = req.headers["jwt-token"];
+    let username;
+    // Check if token is still available
+    jsonwebtoken.verify(token, secretKey, (error, decoded) => {
+        if(error) {
+            return res.sendStatus(401);
+        }
+        console.log(decoded);
+        username = decoded.username
+        res.header("Jwt-Token", token);
+    })
+    res.status(200).json(username)
 }
