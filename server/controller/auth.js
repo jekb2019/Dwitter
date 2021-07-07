@@ -15,12 +15,6 @@ export async function getAll(req, res, next) {
 
 // Sign up user
 export async function signUp(req, res, next) {
-    // Validation Error Checking
-    const errors = validationResult(req);
-    if(!errors.isEmpty()) {
-        return res.status(400).json({message: errors.array()});
-    }
-
     const { username, password, name, email, url } = req.body;
 
     // Check if user with same username already exists
