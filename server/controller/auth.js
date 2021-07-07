@@ -1,5 +1,6 @@
 import jsonwebtoken from 'jsonwebtoken';
 import * as authRepository from '../data/auth.js';
+import { validationResult } from 'express-validator';
 
 // JWT Secret Key
 const secretKey = 'VctqLpa73cX9kKa9gHHhwDd6Xz9W5Hxk';
@@ -13,9 +14,13 @@ export async function getAll(req, res, next) {
 
 
 // Sign up user
-// 토근은 아직 구현 못했고, 데이터베이스에 새 유저 넣는것만 함
-// 아이디 비번 중복 확인 아직 안함
 export async function signUp(req, res, next) {
+    // Validation Error Checking
+    const errors = validationResult(req);
+    if(!errors.isEmpty()) {
+        return res.status(400).json({message: errors.array()});
+    }
+
     const { username, password, name, email, url } = req.body;
 
     // Check if user with same username already exists
