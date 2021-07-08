@@ -6,16 +6,32 @@ import { validate } from '../middleware/validator.js';
 const router = express.Router();
 
 const validateCredential = [
-    body('username').trim().isLength({ min: 5, max: 12 }).withMessage("Invalid Username"),
-    body("password").trim().isLength({ min: 5 }).withMessage("Invalid Password"),
+    body('username')
+        .trim()
+        .isLength({ min: 5, max: 12 })
+        .withMessage("Invalid Username"),
+    body("password")
+        .trim()
+        .isLength({ min: 5 })
+        .withMessage("Invalid Password"),
     validate
 ]
 
 const validateSignUp = [
     ...validateCredential,
-    body("name").trim().isLength({min:2, max:10}).withMessage("Invalid name"),
-    body("email").trim().isEmail().withMessage("invalid email").normalizeEmail(),
-    body("url").isURL().withMessage("invalid URL").optional({ nullable: true, checkFalsy: true }),
+    body("name")
+        .trim()
+        .isLength({min:2, max:10})
+        .withMessage("Invalid name"),
+    body("email")
+        .trim()
+        .isEmail()
+        .withMessage("invalid email")
+        .normalizeEmail(),
+    body("url")
+        .isURL()
+        .withMessage("invalid URL")
+        .optional({ nullable: true, checkFalsy: true }), // 데이터가 없거나, falsy (예: "")라도 허용
     validate
 ]
 

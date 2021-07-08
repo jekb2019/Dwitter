@@ -1,14 +1,17 @@
 import jsonwebtoken from 'jsonwebtoken';
-import * as authRepository from '../data/auth.js';
-import { validationResult } from 'express-validator';
+import * as userRepository from '../data/auth.js';
+import bcrypt from 'bcrypt';
 
 // JWT Secret Key
-const secretKey = 'VctqLpa73cX9kKa9gHHhwDd6Xz9W5Hxk';
+// TODO: Make it secure!
+const jwtSecretKey = 'VctqLpa73cX9kKa9gHHhwDd6Xz9W5Hxk';
+const jwtExpiresInDays = '2d';
+const bcryptSaltRounds = 12;
 
 // ## This function should be removed. Highly insecure ##
 // Get all users (for test purpose)
 export async function getAll(req, res, next) {
-    const allUsers = await authRepository.getAll();
+    const allUsers = await userRepository.getAll();
     res.status(200).json(allUsers)
 }
 
@@ -18,43 +21,52 @@ export async function signUp(req, res, next) {
     const { username, password, name, email, url } = req.body;
 
     // Check if user with same username already exists
-    const isDuplicate = await authRepository.isDuplicateUsername(username);
-    if(isDuplicate) {
-        return res.sendStatus(409);
+    const found = await userRepository.getUserByUsername(username);
+    if(found) {
+        return res.status(409).json({ message: `${username} already exists` });
     }
 
+    // encrypt password before sending it to DB
+    const hashed = await bcrypt.hash(password, bcryptSaltRounds);
+
     // Register new user
-    const user = await authRepository.signUp(username, password, name, email, url);
+    const userId = await userRepository.signUp({
+        username,
+        password: hashed, 
+        name, 
+        email, 
+        url
+    });
 
     // Create JWT token and insert it to header (Default expiration time is 24 hours)
-    const token = jsonwebtoken.sign({
-        id: user.id,
-        username: user.username
-    }, secretKey, {expiresIn: 3600});
+    const token = createJwtToken(userId);
 
-    res.header("JWT-Token", token);
-    res.status(201).json(user)
+    // res.header("JWT-Token", token);
+    res.status(201).json({ token, username })
 }
 
 // Login user
 export async function login(req, res, next) {
     const { username, password } = req.body;
 
-    // Login Validation
-    const user = await authRepository.getUserByCred(username, password);
-    // If Success, Create JWT token and insert it to header
-    if(user) {
-        // Default expiration time is 24 hours
-        const token = jsonwebtoken.sign({
-            id: user.id,
-            username: user.username
-        }, secretKey, {expiresIn: 3600}) 
-        // insert token to header
-        res.header("Jwt-Token", token);
-        return res.status(200).json(username)
+    // Check if user with provided username exists
+    const user = await userRepository.getUserByUsername(username);
+    if(!user) {
+        return res.status(401).json({ message: 'Invalid user or password' });
     }
-    // If Failed, Return 404
-    res.sendStatus(404);
+
+    // Compare user typed password with encrypted password in the database
+    const isValidPassword = await bcrypt.compare(password, user.password)
+    if(!isValidPassword) {
+        return res.status(401).json({ message: 'Invalid user or password' });
+    }
+
+    // Default expiration time is 24 hours
+    const token = createJwtToken(user.id);
+
+    // insert token to header
+    // res.header("Jwt-Token", token);
+    return res.status(200).json({ token, username })
 }
 
 // Check if currently holding token is available
@@ -62,7 +74,7 @@ export async function checkTokenAvailable(req, res, next) {
     const token = req.headers["jwt-token"];
     let username;
     // Check if token is still available
-    jsonwebtoken.verify(token, secretKey, (error, decoded) => {
+    jsonwebtoken.verify(token, jwtSecretKey, (error, decoded) => {
         if(error) {
             return res.sendStatus(401);
         }
@@ -71,4 +83,8 @@ export async function checkTokenAvailable(req, res, next) {
         res.header("Jwt-Token", token);
     })
     res.status(200).json(username)
+}
+
+function createJwtToken(id) {
+    return jsonwebtoken.sign({ id }, jwtSecretKey, {expiresIn: jwtExpiresInDays})
 }
