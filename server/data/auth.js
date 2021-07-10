@@ -22,6 +22,11 @@ export async function getUserByUsername(username) {
     return users.find((user) => user.username === username);
 }
 
+// Get a specified user with  matching ig
+export async function getUserById(id) {
+    return users.find((user) => user.id === id);
+}
+
 // Add a user
 export async function createUser(userInfo) {
     const createdUser = { ...userInfo, id: Date.now().toString() };

@@ -1,4 +1,4 @@
-import jsonwebtoken from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
 import * as userRepository from '../data/auth.js';
 import bcrypt from 'bcrypt';
 
@@ -70,22 +70,32 @@ export async function login(req, res, next) {
     return res.status(200).json({ token, username })
 }
 
-// Check if currently holding token is available
-export async function checkTokenAvailable(req, res, next) {
-    const token = req.headers["jwt-token"];
-    let username;
-    // Check if token is still available
-    jsonwebtoken.verify(token, jwtSecretKey, (error, decoded) => {
-        if(error) {
-            return res.sendStatus(401);
-        }
-        console.log(decoded);
-        username = decoded.username
-        res.header("Jwt-Token", token);
-    })
-    res.status(200).json(username)
+// Create JWT token
+function createJwtToken(id) {
+    return jwt.sign({ id }, jwtSecretKey, {expiresIn: jwtExpiresInDays})
 }
 
-function createJwtToken(id) {
-    return jsonwebtoken.sign({ id }, jwtSecretKey, {expiresIn: jwtExpiresInDays})
+// Check if currently holding token is available
+// export async function checkTokenAvailable(req, res, next) {
+//     const token = req.headers["authorization"];
+//     console.log(token);
+//     let username;
+//     // Check if token is still available
+//     jwt.verify(token, jwtSecretKey, (error, decoded) => {
+//         if(error) {
+//             return res.sendStatus(401);
+//         }
+//         console.log(decoded);
+//         // res.header("Jwt-Token", token);
+//         res.status(200).json({token, username})
+//     })
+// }
+
+export async function me(req, res, next) {
+    const user = await userRepository.getUserById(req.userId); // access custom data
+    // Double check if user exists (primary check is done in auth middleware (previous callback))
+    if(!user) {
+        return res.status(404).json({ message: 'User not found' });
+    }
+    res.status(200).json({ token: req.token, username: user.username})
 }
