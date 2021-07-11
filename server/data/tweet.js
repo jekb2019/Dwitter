@@ -1,45 +1,65 @@
+import * as userRepository from './auth.js'
+
 // Initial Mock Data
 let tweets = [
     {
       id: '1',
       text: '드림코더분들 화이팅!',
-      createdAt: Date.now().toString(),
-      name: 'Bob',
-      username: 'bob',
-      url: 'https://widgetwhats.com/app/uploads/2019/11/free-profile-photo-whatsapp-1.png',
+      createdAt: new Date().toString(),
+      userId: '1'
     },
     {
       id: '2',
       text: '안뇽!',
-      createdAt: Date.now().toString(),
-      name: 'Ellie',
-      username: 'ellie',
+      createdAt: new Date().toString(),
+      userId: '1'
     },
   ];
   
   // Functions for retrieving/inserting data to the database
   export async function getAll() {
-    return tweets;
+    return Promise.all(
+      tweets.map(async (tweet) => {
+        const { username, name, url } = await userRepository.getUserById(
+          tweet.userId
+        );
+        return { ...tweet, username, name, url }
+      })
+    )
   }
   
   export async function getAllByUsername(username) {
-    return tweets.filter((tweet) => tweet.username === username);
+    return getAll().then(tweets => 
+      tweets.filter(tweet => tweet.username === username)  
+    )
   }
   
   export async function getById(id) {
-    return tweets.find((tweet) => tweet.id === id);
+    const found = tweets.find(tweet => tweet.id === id);
+    if(!found) {
+      return null
+    }
+
+    console.log(found.userId);
+
+    const { username, name, url } = await userRepository.getUserById(found.userId);
+
+    return { ...found, username, name, url };
   }
   
-  export async function create(text, name, username) {
+  // Text와 userid만 받아와서 트윗 만들기
+  export async function create(text, userId) {
     const tweet = {
-      id: Date.now().toString(),
+      id: new Date().toString(),
       text,
       createdAt: new Date(),
-      name,
-      username,
-    };
+      userId
+    }
+
     tweets = [tweet, ...tweets];
-    return tweet;
+
+
+    return await getById(tweet.id)
   }
   
   export async function update(id, text) {
@@ -47,7 +67,7 @@ let tweets = [
     if (tweet) {
       tweet.text = text;
     }
-    return tweet;
+    return getById(tweet.id);
   }
   
   export async function remove(id) {
