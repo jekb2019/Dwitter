@@ -47,6 +47,15 @@ export async function updateTweet(req, res, next) {
 // Delete tweet specified by tweet id
 export async function deleteTweet(req, res, next) {
   const id = req.params.id;
+  
+  // Check if the user is authorized to delete the tweet
+  const tweet = await tweetRepository.getById(id)
+  if(!tweet) {
+    return res.sendStatus(404);
+  }
+  if(tweet.userId !== req.userId) {
+    return res.sendStatus(403);
+  }
   await tweetRepository.remove(id);
   res.sendStatus(204);
 }
