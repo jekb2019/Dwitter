@@ -31,12 +31,17 @@ export async function createTweet(req, res, next) {
 export async function updateTweet(req, res, next) {
   const id = req.params.id;
   const text = req.body.text;
-  const tweet = await tweetRepository.update(id, text);
-  if (tweet) {
-    res.status(200).json(tweet);
-  } else {
-    res.status(404).json({ message: `Tweet id(${id}) not found` });
+
+  // Check if the user is authorized to update the tweet
+  const tweet = await tweetRepository.getById(id);
+  if(!tweet) {
+    return res.sendStatus(404);
   }
+  if(tweet.userId !== req.userId) {
+    return res.sendStatus(403);
+  }
+  const updated = await tweetRepository.update(id, text);
+  res.status(200).json(updated);
 }
 
 // Delete tweet specified by tweet id
