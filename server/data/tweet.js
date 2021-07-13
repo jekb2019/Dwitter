@@ -50,7 +50,7 @@ let tweets = [
   // Text와 userid만 받아와서 트윗 만들기
   export async function create(text, userId) {
     const tweet = {
-      id: new Date().toString(),
+      id: Date.now().toString(),
       text,
       createdAt: new Date(),
       userId
