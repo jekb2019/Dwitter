@@ -1,12 +1,7 @@
 import jwt from 'jsonwebtoken';
 import * as userRepository from '../data/auth.js';
 import bcrypt from 'bcrypt';
-
-// JWT Secret Key
-// TODO: Make it secure!
-const jwtSecretKey = 'VctqLpa73cX9kKa9gHHhwDd6Xz9W5Hxk';
-const jwtExpiresInDays = '2d';
-const bcryptSaltRounds = 12;
+import { config } from '../config.js';
 
 // ## This function should be removed. Highly insecure ##
 // Get all users (for test purpose)
@@ -27,7 +22,7 @@ export async function signUp(req, res, next) {
     }
 
     // encrypt password before sending it to DB
-    const hashed = await bcrypt.hash(password, bcryptSaltRounds);
+    const hashed = await bcrypt.hash(password, config.bcrypt.saltRounds);
 
     // Register new user
     const userId = await userRepository.createUser({
@@ -70,24 +65,9 @@ export async function login(req, res, next) {
 
 // Create JWT token
 function createJwtToken(id) {
-    return jwt.sign({ id }, jwtSecretKey, {expiresIn: jwtExpiresInDays})
+    console.log(config.jwt.secretKey);
+    return jwt.sign({ id }, config.jwt.secretKey, {expiresIn: config.jwt.expiresInSec})
 }
-
-// Check if currently holding token is available
-// export async function checkTokenAvailable(req, res, next) {
-//     const token = req.headers["authorization"];
-//     console.log(token);
-//     let username;
-//     // Check if token is still available
-//     jwt.verify(token, jwtSecretKey, (error, decoded) => {
-//         if(error) {
-//             return res.sendStatus(401);
-//         }
-//         console.log(decoded);
-//         // res.header("Jwt-Token", token);
-//         res.status(200).json({token, username})
-//     })
-// }
 
 export async function me(req, res, next) {
     const user = await userRepository.getUserById(req.userId); // access custom data
