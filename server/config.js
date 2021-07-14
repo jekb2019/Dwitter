@@ -14,12 +14,12 @@ function required(key, defaultValue = undefined) {
 export const config = {
     jwt: {
         secretKey: required('JWT_SECRET'),
-        expiresInSec: required('JWT_EXPIRES_SEC', 86400),
+        expiresInSec: parseInt(required('JWT_EXPIRES_SEC', 86400)),
     },
     bcrypt: {
         saltRounds: parseInt(required('BCRYPT_SALT_ROUNDS', 12)),
     },
     host: {
-        port: required('HOST_PORT', 8080)
+        port: parseInt(required('HOST_PORT', 8080))
     }
 };
