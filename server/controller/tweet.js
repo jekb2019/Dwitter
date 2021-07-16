@@ -1,3 +1,4 @@
+import { getSocketIO } from '../connection/socket.js';
 import * as tweetRepository from '../data/tweet.js';
 
 // Get tweets by usernamae. If no username specified, get all tweets
@@ -25,6 +26,7 @@ export async function createTweet(req, res, next) {
   const { text, name, username } = req.body;
   const tweet = await tweetRepository.create(text, req.userId);
   res.status(201).json(tweet);
+  getSocketIO().emit('tweets', tweet);
 }
 
 // Update tweet specified by tweet id

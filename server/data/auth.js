@@ -8,6 +8,13 @@ let users = [
         name: 'Jason',
         email: 'jason@gmail.com',
         url: 'https://widgetwhats.com/app/uploads/2019/11/free-profile-photo-whatsapp-1.png'
+    },
+    {
+        id: '2',
+        username: 'jason456',
+        password: '$2b$12$ewY9o/gCzcY.tqVbmB46w.FJYcoLPGfxD.yEgh.Sl0CrvxIpEESgu',
+        name: 'Eungang',
+        email: 'eungang@gmail.com'
     }
 ];
 
