@@ -8,10 +8,10 @@ class Socket {
         this.io = new Server(server, {
             cors: {
                 origin: '*',
-            }
+            },
         });
 
-        this.io.use((socket, nexts) => {
+        this.io.use((socket, next) => {
             const token = socket.handshake.auth.token;
             if(!token) {
                 return next(new Error('Authentication error'));
