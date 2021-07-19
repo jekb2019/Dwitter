@@ -3,7 +3,7 @@ import socket from 'socket.io-client';
 export default class Socket {
     constructor(baseURL, getAccessToken) {
         this.io = socket(baseURL, {
-            auth: (cb) => cb({ token:getAccessToken() }),
+            auth: (cb) => cb({ token: getAccessToken() }),
         });
 
         this.io.on('connection_error', (err) => {
