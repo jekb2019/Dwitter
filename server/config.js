@@ -22,6 +22,7 @@ export const config = {
     host: {
         port: parseInt(required('HOST_PORT', 8080))
     },
+    //MySQL 때문에 추가한것
     db: {
         host: required('DB_HOST'),
         user: required('DB_USER'),

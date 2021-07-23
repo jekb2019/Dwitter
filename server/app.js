@@ -27,6 +27,7 @@ app.use((error, req, res, next) => {
   res.sendStatus(500);
 });
 
+// MySQL 때문에 추가한 것
 db.getConnection().then(connection => console.log(connection))
 
 const server = app.listen(config.host.port);
