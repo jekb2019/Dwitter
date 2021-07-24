@@ -28,8 +28,7 @@ app.use((error, req, res, next) => {
 });
 
 connectDB()
-  .then((client) => {
-    console.log(client);
+  .then(() => {
     const server = app.listen(config.host.port);
     initSocket(server);
   })
