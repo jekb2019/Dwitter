@@ -20,7 +20,7 @@ export const isAuth = async (req, res, next) => {
             if(error) {
                 return res.status(401).json(AUTH_ERROR);
             }
-            const user = await userRepository.getUserById(decode.id);
+            const user = await userRepository.findById(decode.id);
             // Check if such user exists (double checked in the next callback)
             if(!user) {
                 return res.status(401).json(AUTH_ERROR);
