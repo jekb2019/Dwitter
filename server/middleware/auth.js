@@ -27,6 +27,7 @@ export const isAuth = async (req, res, next) => {
             }
             // 만약 앞으로 이어지는 미들웨어의 콜백함수에서 계속 사용해야하는 데이터라면 아래와 같이 req.customData로 등록해줄수 있다.
             req.userId = user.id; // req자체에 user id를 추가
+            req.token = token;
             next();
         }
     )

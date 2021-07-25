@@ -69,7 +69,7 @@ function createJwtToken(id) {
 }
 
 export async function me(req, res, next) {
-    const user = await userRepository.getUserById(req.userId); // access custom data
+    const user = await userRepository.findById(req.userId); // access custom data
     // Double check if user exists (primary check is done in auth middleware (previous callback))
     if(!user) {
         return res.status(404).json({ message: 'User not found' });
