@@ -7,7 +7,7 @@
 Dwitter is a simplified version of Tweeter. It is a special SNS just for you and your family!
 
 <p align="center">
-  <img src="https://user-images.githubusercontent.com/54789857/127760129-089bcb8b-81b1-49ed-9181-4390fce50f5f.png" width="350" title="logo">
+  <img src="https://user-images.githubusercontent.com/54789857/127760164-6081b32c-bcab-435c-a1b0-1f66ff948c97.png" width="350" title="logo">
 </p>
 
 # Getting Started
